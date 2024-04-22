@@ -111,7 +111,7 @@ function Movie2(id, title,date,poster,overview){
 }
 
 
-app.get('*',(erq,res)=>{
+app.get('*',(req,res)=>{
     res.status(404).send("Client side error 404!");
 })
 app.use(express.json());
