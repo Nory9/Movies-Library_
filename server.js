@@ -7,6 +7,13 @@ const axios=require('axios');
 const env=require('dotenv').config();
 const cors = require('cors');
 app.use(cors());
+const bodyparser= require('body-parser');
+app.use(bodyparser.urlencoded({extended:false}))
+app.use(bodyparser.json())
+const {Client} = require('pg');
+const url = `postgres://noor:0000@localhost:5432/movies`
+const client =new Client(url); 
+
 
 
 function Movie(title, genre_ids, original_language, original_title, poster_path, video, vote_average, overview, release_date, vote_count, id, adult, backdrop_path, popularity, media_type){
@@ -68,6 +75,10 @@ app.get('/',homeHandler);
 app.get('/trending',trendingHandler);
 app.get('/search',searchHandler);
 
+
+
+
+
 function trendingHandler(req,res){
     const url =`https://api.themoviedb.org/3/trending/all/week?api_key=${process.env.API_KEY}`;
     axios.get(url)
@@ -109,13 +120,40 @@ function Movie2(id, title,date,poster,overview){
     this.poster=poster,
     this.overview=overview
 }
+//lab 13 routes 
+app.post('/addMovie',addMovieHandler);
+app.get('/allMovies',getAllMoviesHandler);
 
+function addMovieHandler(req,res){
+    const {title,genre,overview,release_date,poster} = req.body
+    const sql= `INSERT INTO movie (title,genre,overview,release_date,poster) 
+    VALUES ($1,$2,$3,$4,$5) RETURNING *`;
+    const valuse= [title,genre,overview,release_date,poster]
+    client.query(sql,valuse).then((result)=>{
+        console.log(result.rows)
+        res.status(201).send(result.rows)
+    })
+    .catch()
+}
+
+function getAllMoviesHandler(req,res){
+    const sql = `SELECT * FROM movie`
+    client.query(sql).then((result)=>{
+        const data = result.rows
+        res.json(data)
+    })
+    .catch()
+}
 
 app.get('*',(req,res)=>{
     res.status(404).send("Client side error 404!");
 })
 app.use(express.json());
+
+client.connect().then(()=>{
+     app.listen(3000,()=>{
+     console.log(`the server is listening on port ${process.env.PORT}`)
+      })
+     })
+.catch()
 // app.use(error500);
-app.listen(3000,()=>{
-    console.log("the server is listening on port 3000")
-});
