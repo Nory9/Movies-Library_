@@ -5,7 +5,7 @@
 **Author Name**: noor misk
 
 ## WRRC
-![alt text](./Screenshot%20(480).png)
+![alt text](./Screenshot%20(485).png)
 
 
 ## Overview
@@ -19,6 +19,10 @@
 - implement the server logic using Express.js.
 4. after that your app is ready to run (run it with npm start command )
 5. dont forget to test your app 
+
+#### lab 13 
+on lab 13 i worked on connecting the server with a database (postgres) then added routes and handlers to add movies to the database and to get all movies from the database 
+
 
 
 ## Project Features
