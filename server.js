@@ -11,6 +11,7 @@ const bodyparser= require('body-parser');
 app.use(bodyparser.urlencoded({extended:false}))
 app.use(bodyparser.json())
 const {Client} = require('pg');
+// postgres://username:password@localhost:5432/databaseName
 const url = `postgres://noor:0000@localhost:5432/movies`
 const client =new Client(url); 
 
@@ -125,15 +126,18 @@ app.post('/addMovie',addMovieHandler);
 app.get('/allMovies',getAllMoviesHandler);
 
 function addMovieHandler(req,res){
-    const {title,genre,overview,release_date,poster} = req.body
-    const sql= `INSERT INTO movie (title,genre,overview,release_date,poster) 
-    VALUES ($1,$2,$3,$4,$5) RETURNING *`;
-    const valuse= [title,genre,overview,release_date,poster]
+    const {id,title,genre,overview,release_date,poster} = req.body
+    const sql= `INSERT INTO movie (id,title,genre,overview,release_date,poster) 
+    VALUES ($1,$2,$3,$4,$5,$6) RETURNING *`;
+    const valuse= [id,title,genre,overview,release_date,poster]
     client.query(sql,valuse).then((result)=>{
         console.log(result.rows)
         res.status(201).send(result.rows)
     })
-    .catch()
+    .catch(err => {
+        console.error('Error adding movie:', err);
+            res.status(500).send('Error updating movie');
+ } )
 }
 
 function getAllMoviesHandler(req,res){
@@ -145,6 +149,56 @@ function getAllMoviesHandler(req,res){
     .catch()
 }
 
+// lab 14 
+app.put('/updateMovie/:id',updateMovieHandler);
+app.delete('/deelteMovie/:id',deleteMovieHandler);
+app.get('/getMovie/:id',getMovieHandler)
+
+function updateMovieHandler(req,res){
+    const {id,title,genre,overview,release_date,poster} = req.body
+    const values= [title,genre,overview,release_date,poster,id]
+    let ID = req.params.id;
+    let sql= `UPDATE movie
+    SET title = $1, genre=$2,overview=$3,release_date=$4,poster=$5
+    WHERE id=$6`
+    client.query(sql,values).then(result=>{
+        console.log(result.rows)
+        res.status(200).json(result.rows)
+    }).catch(err => {
+        console.error('Error updating a movie:', err);
+            res.status(500).send('Error updating movie');
+ } )
+}
+
+function deleteMovieHandler(req,res){
+    let {id}=req.params;
+    let values=[id]
+    let sql=`DELETE FROM movie WHERE id=$1`
+    client.query(sql,values).then(result=>{
+        console.log(result.rows)
+        res.status(204).send("deleted")
+    }).catch(err=>{
+        console.error('Error deleting a movie:', err);
+            res.status(500).send('Error deleting movie');
+ } )
+
+}
+
+function getMovieHandler(req,res){
+    let id=req.params.id;
+    let values=[id];
+    let sql=`SELECT * FROM movie
+    WHERE id=$1;`
+    client.query(sql,values).then(result=>{
+        console.log(result.rows);
+        res.status(200).send(result.rows)
+    }).catch(err=>{
+        console.error('Error getting a movie:', err);
+            res.status(500).send('Error getting movie');
+ }
+    )
+}
+
 app.get('*',(req,res)=>{
     res.status(404).send("Client side error 404!");
 })
@@ -152,7 +206,7 @@ app.use(express.json());
 
 client.connect().then(()=>{
      app.listen(3000,()=>{
-     console.log(`the server is listening on port ${process.env.PORT}`)
+     console.log(`the server is listening on port ${process.env.PORT} and connected to databse`)
       })
      })
 .catch()
