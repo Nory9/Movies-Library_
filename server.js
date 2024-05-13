@@ -117,8 +117,8 @@ function Movie2(id, title,date,poster,overview,name,first_air_date){
     this.title=title,
     this.date=date,
     this.poster=poster,
-    this.overview=overview
-    this.name=name
+    this.overview=overview,
+    this.name=name,
     this.first_air_date=first_air_date
 }
 //lab 13 routes 
