@@ -84,7 +84,7 @@ function trendingHandler(req,res){
     .then( result=>{
         console.log('??')
         let movieData= result.data.results.map(x=>{
-            return new Movie2(x.id,x.original_title,x.release_date,x.poster_path,x.overview);
+            return new Movie2(x.id,x.original_title,x.release_date,x.poster_path,x.overview,x.name,x.first_air_date);
         })
         res.json(movieData)
 })
@@ -112,12 +112,14 @@ function homeHandler(req,res){
     res.json('this is the Home Page Let get Started!')
 }
 
-function Movie2(id, title,date,poster,overview){
+function Movie2(id, title,date,poster,overview,name,first_air_date){
     this.id=id,
     this.title=title,
     this.date=date,
     this.poster=poster,
     this.overview=overview
+    this.name=name
+    this.first_air_date=first_air_date
 }
 //lab 13 routes 
 app.post('/addMovie',addMovieHandler);
