@@ -4,5 +4,6 @@ CREATE TABLE  movie(
     genre VARCHAR(255),
     overview VARCHAR(255),
     release_date DATE,
-    poster VARCHAR(255)
+    poster VARCHAR(255),
+    comment VARCHAR(255)
 );

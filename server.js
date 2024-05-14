@@ -126,10 +126,10 @@ app.post('/addMovie',addMovieHandler);
 app.get('/allMovies',getAllMoviesHandler);
 
 function addMovieHandler(req,res){
-    const {id,title,genre,overview,release_date,poster} = req.body
-    const sql= `INSERT INTO movie (id,title,genre,overview,release_date,poster) 
-    VALUES ($1,$2,$3,$4,$5,$6) RETURNING *`;
-    const valuse= [id,title,genre,overview,release_date,poster]
+    const {id,title,genre,overview,release_date,poster,comment} = req.body
+    const sql= `INSERT INTO movie (id,title,genre,overview,release_date,poster,comment) 
+    VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING *`;
+    const valuse= [id,title,genre,overview,release_date,poster,comment]
     client.query(sql,valuse).then((result)=>{
         console.log(result.rows)
         res.status(201).send(result.rows)
