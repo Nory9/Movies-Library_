@@ -157,11 +157,11 @@ app.delete('/deelteMovie/:id',deleteMovieHandler);
 app.get('/getMovie/:id',getMovieHandler)
 
 function updateMovieHandler(req,res){
-    const {id,title,genre,overview,release_date,poster} = req.body
-    const values= [title,genre,overview,release_date,poster,id]
+    const {id,title,genre,overview,release_date,poster,comment} = req.body
+    const values= [title,genre,overview,release_date,poster,id,comment]
     let ID = req.params.id;
     let sql= `UPDATE movie
-    SET title = $1, genre=$2,overview=$3,release_date=$4,poster=$5
+    SET title = $1, genre=$2,overview=$3,release_date=$4,poster=$5,comment=$7
     WHERE id=$6`
     client.query(sql,values).then(result=>{
         console.log(result.rows)
