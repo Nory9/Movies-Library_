@@ -135,8 +135,10 @@ function addMovieHandler(req,res){
         res.status(201).send(result.rows)
     })
     .catch(err => {
-        console.error('Error adding movie:', err);
-            res.status(500).send('Error updating movie');
+         console.error('Error adding movie:', err.stack); // Log the complete error stack
+      res.status(500).send('Error adding movie: ' + err.message);
+        // console.error('Error adding movie:', err);
+        //     res.status(500).send('Error updating movie');
  } )
 }
 
@@ -205,7 +207,7 @@ app.get('*',(req,res)=>{
 app.use(express.json());
 
 client.connect().then(()=>{
-     app.listen(3000,()=>{
+     app.listen(3001,()=>{
      console.log(`the server is listening on port ${process.env.PORT} and connected to databse`)
       })
      })

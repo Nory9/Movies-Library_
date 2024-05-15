@@ -1,9 +1,9 @@
 CREATE TABLE  movie(
-    id int NOT NULL PRIMARY KEY,
-    title VARCHAR(255),
+    id int NOT NULL ,
+    title TEXT,
     genre VARCHAR(255),
-    overview VARCHAR(255),
+    overview TEXT,
     release_date DATE,
-    poster VARCHAR(255),
-    comment VARCHAR(255)
+    poster TEXT,
+    comment TEXT
 );
